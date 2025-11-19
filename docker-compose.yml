@@ -1,0 +1,58 @@
+# version: "3.9"   # 굳이 안 써도 됩니다 (경고 떠서 제거 권장)
+
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: mysite-web
+    ports:
+      - "8080:80"              # http://localhost:8080
+    env_file: .env
+    volumes:
+      - ./app:/var/www/html    # 코드 실시간 반영
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:                  # ★ 네트워크 명시
+      - mysite-net
+
+  db:
+    image: mysql:8.0
+    container_name: mysite-db
+    env_file: .env
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+#    ports:
+#     - "3306:3306"
+    networks:                  # ★ 네트워크 명시
+      - mysite-net
+
+  # (선택) phpMyAdmin
+  # pma:
+  #   image: phpmyadmin:latest
+  #   container_name: mysite-pma
+  #   env_file: .env
+  #   environment:
+  #     PMA_HOST: db
+  #   ports:
+  #     - "8081:80"
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - mysite-net
+
+volumes:
+  db_data:
+
+networks:                       # ★ 공통 네트워크 정의
+  mysite-net:
+    driver: bridge
+

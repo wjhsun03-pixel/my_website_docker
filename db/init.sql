@@ -1,0 +1,22 @@
+CREATE DATABASE IF NOT EXISTS mysite
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_general_ci;
+
+CREATE USER IF NOT EXISTS 'mysiteuser'@'%' IDENTIFIED BY 'StrongPassw0rd!';
+GRANT ALL PRIVILEGES ON mysite.* TO 'mysiteuser'@'%';
+
+FLUSH PRIVILEGES;
+
+
+-- DB/사용자는 .env로 이미 생성되므로 여기서는 테이블만 준비
+CREATE TABLE IF NOT EXISTS posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
