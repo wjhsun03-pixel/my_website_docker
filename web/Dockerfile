@@ -12,4 +12,4 @@ COPY web/php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 # 문서 루트는 기본 /var/www/html (변경 필요 없으면 그대로)
 WORKDIR /var/www/html
-copy app/ .
+COPY app/ .
