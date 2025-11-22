@@ -6,7 +6,7 @@ RUN docker-php-ext-install pdo_mysql
 # Apache 유용 모듈
 RUN a2enmod rewrite
 
-EXPOSE 8000
+EXPOSE 8080
 
 # 타임존 설정 (php.ini에서 확정)
 #WORKDIR web/
